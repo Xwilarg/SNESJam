@@ -1,6 +1,11 @@
 #include <snes.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
 
 extern char tilfont, palfont;
+
+static unsigned int _playerX = INT_MAX / 2, _playerY = INT_MAX / 2;
 
 //---------------------------------------------------------------------------------
 int main(void)
@@ -20,16 +25,25 @@ int main(void)
     bgSetDisable(1);
     bgSetDisable(2);
 
-    // Draw a wonderful text :P
-    consoleDrawText(10, 10, "Hello hello");
-    consoleDrawText(6, 14, "Look at this amazing text");
-    consoleDrawText(3, 18, "Running on SNES wowow");
-
     // Wait for nothing :P
     setScreenOn();
 
+    short pad0;
+
     while (1)
     {
+        // Get inputs
+        pad0 = padsCurrent(0);
+
+        if (pad0 & KEY_UP) _playerY++;
+        if (pad0 & KEY_DOWN) _playerY--;
+        if (pad0 & KEY_RIGHT) _playerX++;
+        if (pad0 & KEY_LEFT) _playerX--;
+
+        char str[50];
+        sprintf(str, "%u ; %u     ", _playerX, _playerY);
+        consoleDrawText(10, 10, str);
+
         WaitForVBlank();
     }
     return 0;
