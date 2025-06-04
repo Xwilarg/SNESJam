@@ -3,9 +3,12 @@
 #include <stdio.h>
 #include <limits.h>
 
+#include "world.h"
+#include "entity.h"
+
 extern char tilfont, palfont;
 
-static unsigned int _playerX = INT_MAX / 2, _playerY = INT_MAX / 2;
+static Entity player;
 
 //---------------------------------------------------------------------------------
 int main(void)
@@ -16,13 +19,15 @@ int main(void)
     consoleSetTextOffset(0x0100);
     consoleInitText(0, 16 * 2, &tilfont, &palfont);
 
+    World_Init();
+    Entity_Init(&player, 0);
+
     // Init background
     bgSetGfxPtr(0, 0x2000);
     bgSetMapPtr(0, 0x6800, SC_32x32);
 
     // Now Put in 16 color mode and disable Bgs except current
     setMode(BG_MODE1, 0);
-    bgSetDisable(1);
     bgSetDisable(2);
 
     // Wait for nothing :P
@@ -35,16 +40,20 @@ int main(void)
         // Get inputs
         pad0 = padsCurrent(0);
 
-        if (pad0 & KEY_UP) _playerY++;
-        if (pad0 & KEY_DOWN) _playerY--;
-        if (pad0 & KEY_RIGHT) _playerX++;
-        if (pad0 & KEY_LEFT) _playerX--;
+        if (pad0 & KEY_UP) player.y++;
+        if (pad0 & KEY_DOWN) player.y--;
+        if (pad0 & KEY_RIGHT) player.x++;
+        if (pad0 & KEY_LEFT) player.x--;
 
         char str[50];
-        sprintf(str, "%u ; %u     ", _playerX, _playerY);
+        sprintf(str, "%u ; %u     ", player.x, player.y);
         consoleDrawText(10, 10, str);
+
+        Entity_Draw(&player);
+        World_SetScroll(player.x, player.y);
 
         WaitForVBlank();
     }
+
     return 0;
 }
