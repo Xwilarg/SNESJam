@@ -1,0 +1,7 @@
+#pragma once
+
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 224
+
+#define SCREEN_WIDTH_HALF 128
+#define SCREEN_HEIGHT_HALF 112

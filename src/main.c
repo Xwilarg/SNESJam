@@ -20,7 +20,8 @@ int main(void)
     consoleInitText(0, 16 * 2, &tilfont, &palfont);
 
     World_Init();
-    u16 startPos = World_GetSize() / 2;
+    u16 worldSize = World_GetSize();
+    u16 startPos = worldSize / 2;
     Entity_Init(&player, 0, startPos, startPos);
 
     // Init background
@@ -41,10 +42,10 @@ int main(void)
         // Get inputs
         pad0 = padsCurrent(0);
 
-        if (pad0 & KEY_UP) player.y--;
-        if (pad0 & KEY_DOWN) player.y++;
-        if (pad0 & KEY_RIGHT) player.x++;
-        if (pad0 & KEY_LEFT) player.x--;
+        if (pad0 & KEY_UP && player.y > 0) player.y--;
+        if (pad0 & KEY_DOWN && player.y < worldSize) player.y++;
+        if (pad0 & KEY_RIGHT && player.x < worldSize) player.x++;
+        if (pad0 & KEY_LEFT && player.x > 0) player.x--;
 
         char str[50];
         sprintf(str, "%u ; %u     ", player.x, player.y);
