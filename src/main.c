@@ -20,7 +20,8 @@ int main(void)
     consoleInitText(0, 16 * 2, &tilfont, &palfont);
 
     World_Init();
-    Entity_Init(&player, 0);
+    u16 startPos = World_GetSize() / 2;
+    Entity_Init(&player, 0, startPos, startPos);
 
     // Init background
     bgSetGfxPtr(0, 0x2000);
@@ -40,8 +41,8 @@ int main(void)
         // Get inputs
         pad0 = padsCurrent(0);
 
-        if (pad0 & KEY_UP) player.y++;
-        if (pad0 & KEY_DOWN) player.y--;
+        if (pad0 & KEY_UP) player.y--;
+        if (pad0 & KEY_DOWN) player.y++;
         if (pad0 & KEY_RIGHT) player.x++;
         if (pad0 & KEY_LEFT) player.x--;
 

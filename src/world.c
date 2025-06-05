@@ -1,7 +1,5 @@
 #include "world.h"
 
-#include <snes.h>
-
 extern char patterns, patterns_end;
 extern char palette;
 extern char map, map_end;
@@ -13,6 +11,11 @@ void World_Init(void)
 
     // Copy Map to VRAM
     bgInitMapSet(1, &map, (&map_end - &map), SC_64x64, 0x1000);
+}
+
+u16 World_GetSize(void)
+{
+    return 512;
 }
 
 void World_SetScroll(u16 x, u16 y)

@@ -1,9 +1,9 @@
 #include "entity.h"
 
-void Entity_Init(Entity* entity, int sprite)
+void Entity_Init(Entity* entity, int sprite, u16 startX, u16 startY)
 {
-    entity->x = 0;
-    entity->y = 0;
+    entity->x = startX;
+    entity->y = startY;
     entity->sprite = sprite;
 }
 

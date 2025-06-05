@@ -4,3 +4,6 @@
 linkfile
 *.sym
 *.sfc
+
+map_512_512.bmp
+map_512_512.map
