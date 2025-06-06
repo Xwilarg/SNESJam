@@ -1,13 +1,13 @@
 #include "entity.h"
 
-void Entity_Init(Entity* entity, int sprite, u16 startX, u16 startY)
+void Entity_Init(Entity* entity, u16 id, u16 startX, u16 startY)
 {
+    entity->id = id;
     entity->x = startX;
     entity->y = startY;
-    entity->sprite = sprite;
 }
 
 void Entity_Draw(Entity* entity)
 {
-    oamSet(0, 50, 50, 0, 0, 0, 0, 0); 
+    oamSet(entity->id, 50, 50, 3, 0, 0, 0, 0);
 }

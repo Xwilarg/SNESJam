@@ -18,7 +18,7 @@ int main(void)
 {
     consoleInit();
 
-    oamInitGfxSet(&gfxpsrite, (&gfxpsrite_end-&gfxpsrite), &palsprite, 0, 0, 0x0000, OBJ_SIZE16_L32);
+    oamInitGfxSet(&gfxpsrite, (&gfxpsrite_end - &gfxpsrite), &palsprite, 0, 0, 0x0000, OBJ_SIZE16_L32);
 
     // Initialize text console with our font
     consoleSetTextMapPtr(0x6800);

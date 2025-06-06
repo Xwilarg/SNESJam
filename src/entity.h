@@ -4,10 +4,10 @@
 
 typedef struct
 {
+    u16 id;
     u16 x;
     u16 y;
-    int sprite;
 } Entity;
 
-void Entity_Init(Entity* entity, int sprite, u16 startX, u16 startY);
+void Entity_Init(Entity* entity, u16 id, u16 startX, u16 startY);
 void Entity_Draw(Entity* entity);
