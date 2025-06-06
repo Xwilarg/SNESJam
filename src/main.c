@@ -8,11 +8,18 @@
 
 extern char tilfont, palfont;
 
+extern char gfxpsrite, gfxpsrite_end;
+extern char palsprite;
+
 static Entity player;
 
 //---------------------------------------------------------------------------------
 int main(void)
 {
+    consoleInit();
+
+    oamInitGfxSet(&gfxpsrite, (&gfxpsrite_end-&gfxpsrite), &palsprite, 0, 0, 0x0000, OBJ_SIZE16_L32);
+
     // Initialize text console with our font
     consoleSetTextMapPtr(0x6800);
     consoleSetTextGfxPtr(0x3000);
@@ -51,8 +58,8 @@ int main(void)
         sprintf(str, "%u ; %u     ", player.x, player.y);
         consoleDrawText(10, 10, str);
 
-        Entity_Draw(&player);
         World_SetScroll(player.x, player.y);
+        Entity_Draw(&player);
 
         WaitForVBlank();
     }

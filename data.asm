@@ -24,3 +24,10 @@ palette:
 .incbin "map_512_512.pal"
 
 .ends
+
+.section ".rodata3" superfree
+gfxpsrite: .incbin "ball.pic"
+gfxpsrite_end:
+
+palsprite: .incbin "ball.pal"
+.ends
