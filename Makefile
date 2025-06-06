@@ -22,6 +22,6 @@ map_512_512.pic: map_512_512.bmp
 	$(GFXCONV) -s 8 -o 16 -u 16 -e 2 -p -m -t bmp -i $<
 
 ball.pic: ball.bmp
-	$(GFXCONV) -s 8 -o 256 -u 16 -e 0 -p -m -t bmp -i $<
+	$(GFXCONV) -s 16 -o 16 -u 16 -p -t bmp -i $<
 
 bitmaps : pvsneslibfont.pic map_512_512.pic ball.pic
