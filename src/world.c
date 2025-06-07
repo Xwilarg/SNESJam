@@ -1,9 +1,17 @@
 #include "world.h"
 #include "config.h"
+#include "entity.h"
+
+#define PLAYER_SPEED 1
 
 extern char patterns, patterns_end;
 extern char palette;
 extern char map, map_end;
+
+static u16 playerX, playerY;
+static Entity player;
+
+static char debug_str[50];
 
 void World_Init(void)
 {
@@ -12,15 +20,56 @@ void World_Init(void)
 
     // Copy Map to VRAM
     bgInitMapSet(1, &map, (&map_end - &map), SC_64x64, 0x1000);
+
+    u16 startPos = WORLD_SIZE / 2;
+    playerX = startPos;
+    playerY = startPos;
+    Entity_Init(&player, 0, startPos, startPos);
 }
 
-void World_SetScroll(u16 x, u16 y)
+void World_SetScroll(void)
 {
-    u16 finalX = x - SCREEN_WIDTH_HALF;
-    u16 finalY = y - SCREEN_HEIGHT_HALF;
+    short pad0 = padsCurrent(0);
+
+    // Get inputs
+    if (pad0 & KEY_UP)
+    {
+        playerY -= PLAYER_SPEED;
+        if (playerY < 0) playerY = 0;
+    }
+    if (pad0 & KEY_DOWN)
+    {
+        playerY += PLAYER_SPEED;
+        if (playerY > WORLD_SIZE) playerY = WORLD_SIZE;
+    }
+    if (pad0 & KEY_RIGHT)
+    {
+        playerX += PLAYER_SPEED;
+        if (playerX > WORLD_SIZE) playerX = WORLD_SIZE;
+    }
+    if (pad0 & KEY_LEFT)
+    {
+        playerX -= PLAYER_SPEED;
+        if (playerX < 0) playerX = 0;
+    }
+
+
+    s16 finalX = playerX - SCREEN_WIDTH_HALF;
+    s16 finalY = playerY - SCREEN_HEIGHT_HALF;
     if (finalX < 0) finalX = 0;
     else if (finalX > CANVAS_MAX_X) finalX = CANVAS_MAX_X;
-    if (finalY < 0) finalX = 0;
+    else player.x = SCREEN_WIDTH_HALF;
+    if (finalY < 0) finalY = 0;
     else if (finalY > CANVAS_MAX_Y) finalX = CANVAS_MAX_Y;
+    else player.y = SCREEN_WIDTH_HALF;
+
+    // Debug
+    sprintf(debug_str, "Global: %u ; %u     ", player.x, player.y);
+    consoleDrawText(10, 8, debug_str);
+    sprintf(debug_str, "Camera: %d ; %d     ", finalX, finalY);
+    consoleDrawText(10, 10, debug_str);
+
+    // Draw
     bgSetScroll(1, finalX, finalY);
+    Entity_Draw(&player);
 }

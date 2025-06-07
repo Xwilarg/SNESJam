@@ -12,8 +12,6 @@ extern char tilfont, palfont;
 extern char gfxpsrite, gfxpsrite_end;
 extern char palsprite;
 
-static Entity player;
-
 //---------------------------------------------------------------------------------
 int main(void)
 {
@@ -28,8 +26,6 @@ int main(void)
     consoleInitText(0, 16 * 2, &tilfont, &palfont);
 
     World_Init();
-    u16 startPos = WORLD_SIZE / 2;
-    Entity_Init(&player, 0, startPos, startPos);
 
     // Init background
     bgSetGfxPtr(0, 0x2000);
@@ -42,24 +38,9 @@ int main(void)
     // Wait for nothing :P
     setScreenOn();
 
-    short pad0;
-
     while (1)
     {
-        // Get inputs
-        pad0 = padsCurrent(0);
-
-        if (pad0 & KEY_UP && player.y > 0) player.y--;
-        if (pad0 & KEY_DOWN && player.y < WORLD_SIZE) player.y++;
-        if (pad0 & KEY_RIGHT && player.x < WORLD_SIZE) player.x++;
-        if (pad0 & KEY_LEFT && player.x > 0) player.x--;
-
-        char str[50];
-        sprintf(str, "%u ; %u     ", player.x, player.y);
-        consoleDrawText(10, 10, str);
-
-        World_SetScroll(player.x, player.y);
-        Entity_Draw(&player);
+        World_SetScroll();
 
         WaitForVBlank();
     }
