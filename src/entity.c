@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "config.h"
 
 void Entity_Init(Entity* entity, u16 id, u16 startX, u16 startY)
 {
@@ -9,5 +10,5 @@ void Entity_Init(Entity* entity, u16 id, u16 startX, u16 startY)
 
 void Entity_Draw(Entity* entity)
 {
-    oamSet(entity->id, 50, 50, 3, 0, 0, 0, 0);
+    oamSet(entity->id, SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF, 3, 0, 0, 0, 0);
 }

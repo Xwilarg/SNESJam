@@ -1,4 +1,5 @@
 #include "world.h"
+#include "config.h"
 
 extern char patterns, patterns_end;
 extern char palette;
@@ -13,12 +14,13 @@ void World_Init(void)
     bgInitMapSet(1, &map, (&map_end - &map), SC_64x64, 0x1000);
 }
 
-u16 World_GetSize(void)
-{
-    return 512;
-}
-
 void World_SetScroll(u16 x, u16 y)
 {
-    bgSetScroll(1, x, y);
+    u16 finalX = x - SCREEN_WIDTH_HALF;
+    u16 finalY = y - SCREEN_HEIGHT_HALF;
+    if (finalX < 0) finalX = 0;
+    else if (finalX > CANVAS_MAX_X) finalX = CANVAS_MAX_X;
+    if (finalY < 0) finalX = 0;
+    else if (finalY > CANVAS_MAX_Y) finalX = CANVAS_MAX_Y;
+    bgSetScroll(1, finalX, finalY);
 }
