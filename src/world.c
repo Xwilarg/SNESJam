@@ -2,13 +2,13 @@
 #include "config.h"
 #include "entity.h"
 
-#define PLAYER_SPEED 1
+#define PLAYER_SPEED 3
 
 extern char patterns, patterns_end;
 extern char palette;
 extern char map, map_end;
 
-static u16 playerX, playerY;
+static s16 playerX, playerY;
 static Entity player;
 
 static char debug_str[50];
@@ -40,12 +40,12 @@ void World_SetScroll(void)
     if (pad0 & KEY_DOWN)
     {
         playerY += PLAYER_SPEED;
-        if (playerY > WORLD_SIZE) playerY = WORLD_SIZE;
+        if (playerY >= WORLD_SIZE) playerY = WORLD_SIZE - 1;
     }
     if (pad0 & KEY_RIGHT)
     {
         playerX += PLAYER_SPEED;
-        if (playerX > WORLD_SIZE) playerX = WORLD_SIZE;
+        if (playerX >= WORLD_SIZE) playerX = WORLD_SIZE - 1;
     }
     if (pad0 & KEY_LEFT)
     {
@@ -56,15 +56,33 @@ void World_SetScroll(void)
 
     s16 finalX = playerX - SCREEN_WIDTH_HALF;
     s16 finalY = playerY - SCREEN_HEIGHT_HALF;
-    if (finalX < 0) finalX = 0;
-    else if (finalX > CANVAS_MAX_X) finalX = CANVAS_MAX_X;
-    else player.x = SCREEN_WIDTH_HALF;
-    if (finalY < 0) finalY = 0;
-    else if (finalY > CANVAS_MAX_Y) finalX = CANVAS_MAX_Y;
-    else player.y = SCREEN_WIDTH_HALF;
+    if (finalX < 0)
+    {
+        player.x = PLAYER_MID_X + finalX;
+        finalX = 0;
+    }
+    else if (finalX > CANVAS_MAX_X)
+    {
+        player.x = PLAYER_MID_X + (finalX - CANVAS_MAX_X);
+        finalX = CANVAS_MAX_X;
+    }
+    else player.x = PLAYER_MID_X;
+    if (finalY < 0)
+    {
+        player.y = PLAYER_MID_Y + finalY;
+        finalY = 0;
+    }
+    else if (finalY > CANVAS_MAX_Y)
+    {
+        player.y = PLAYER_MID_Y + (finalX - CANVAS_MAX_Y);
+        finalX = CANVAS_MAX_Y;
+    }
+    else player.y = PLAYER_MID_Y;
 
     // Debug
-    sprintf(debug_str, "Global: %u ; %u     ", player.x, player.y);
+    sprintf(debug_str, "Global: %u ; %u     ", playerX, playerY);
+    consoleDrawText(10, 6, debug_str);
+    sprintf(debug_str, "Local: %u ; %u     ", player.x, player.y);
     consoleDrawText(10, 8, debug_str);
     sprintf(debug_str, "Camera: %d ; %d     ", finalX, finalY);
     consoleDrawText(10, 10, debug_str);

@@ -10,5 +10,5 @@ void Entity_Init(Entity* entity, u16 id, u16 startX, u16 startY)
 
 void Entity_Draw(Entity* entity)
 {
-    oamSet(entity->id, PLAYER_MID_X, PLAYER_MID_Y, 3, 0, 0, 0, 0);
+    oamSet(entity->id, entity->x, entity->y, 3, 0, 0, 0, 0);
 }
