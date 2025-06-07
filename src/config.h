@@ -13,3 +13,6 @@
 // Math for optimization
 #define CANVAS_MAX_X 256 // WORLD_SIZE - SCREEN_WIDTH
 #define CANVAS_MAX_Y 288 // WORLD_SIZE - SCREEN_HEIGHT
+
+#define PLAYER_MID_X 112 // SCREEN_WIDTH_HALF - player size (16)
+#define PLAYER_MID_Y 96 // SCREEN_HEIGHT_HALF - player size (16)
