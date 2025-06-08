@@ -74,8 +74,8 @@ void World_SetScroll(void)
     }
     else if (finalY > CANVAS_MAX_Y)
     {
-        player.y = PLAYER_MID_Y + (finalX - CANVAS_MAX_Y);
-        finalX = CANVAS_MAX_Y;
+        player.y = PLAYER_MID_Y + (finalY - CANVAS_MAX_Y);
+        finalY = CANVAS_MAX_Y;
     }
     else player.y = PLAYER_MID_Y;
 
