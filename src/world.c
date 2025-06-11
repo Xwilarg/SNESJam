@@ -49,11 +49,11 @@ static u8 collisions[WORLD_TILE_SIZE] =
     1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1
-}
+};
 
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
-static void GetSpeed(s16 x, s16 y)
+static u8 GetSpeed(s16 x, s16 y)
 {
     u16 arrX = (u16)(x / TILE_SIZE);
     u16 arrY = (u16)(y / TILE_SIZE);
