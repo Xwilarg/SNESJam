@@ -38,9 +38,12 @@ int main(void)
     // Wait for nothing :P
     setScreenOn();
 
+    bool isFirstRender = true;
+
     while (1)
     {
-        World_SetScroll();
+        World_SetScroll(isFirstRender);
+        isFirstRender = false;
 
         WaitForVBlank();
     }

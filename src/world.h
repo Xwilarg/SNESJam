@@ -3,4 +3,4 @@
 #include <snes.h>
 
 void World_Init(void);
-void World_SetScroll(void);
+void World_SetScroll(bool firstRender);

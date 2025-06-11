@@ -82,7 +82,7 @@ void World_Init(void)
     Entity_Init(&player, 0, startPos, startPos);
 }
 
-void World_SetScroll(void)
+void World_SetScroll(bool forceRender)
 {
     short pad0 = padsCurrent(0);
 
@@ -114,7 +114,7 @@ void World_SetScroll(void)
         didMove = true;
     }
 
-    if (!didMove) return; // TODO: ???
+    if (!didMove && !forceRender) return;
 
     s16 finalX = playerX - SCREEN_WIDTH_HALF;
     s16 finalY = playerY - SCREEN_HEIGHT_HALF;
