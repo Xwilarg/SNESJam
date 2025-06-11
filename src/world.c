@@ -88,6 +88,9 @@ void World_SetScroll(bool forceRender)
 
     bool didMove = false;
 
+    s16 lastX = playerX;
+    s16 lastY = playerY;
+
     // Get inputs
     if (pad0 & KEY_UP)
     {
@@ -115,6 +118,16 @@ void World_SetScroll(bool forceRender)
     }
 
     if (!didMove && !forceRender) return;
+
+    u8 new_speed = GetSpeed(playerX, playerY);
+    if (new_speed == 0)
+    {
+        playerX = lastX;
+        playerY = lastY;
+        return; // Wall, we didn't move
+    }
+
+    player_speed = new_speed;
 
     s16 finalX = playerX - SCREEN_WIDTH_HALF;
     s16 finalY = playerY - SCREEN_HEIGHT_HALF;
