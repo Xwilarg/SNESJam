@@ -9,6 +9,9 @@
 
 // Size of the world tilemap
 #define WORLD_SIZE 512
+#define TILE_SIZE 16
+#define WORLD_TILE_LENGTH 32 // WORLD_SIZE / TILE_SIZE
+#define WORLD_TILE_SIZE 1024 // WORLD_TILE_LENGTH * WORLD_TILE_LENGTH
 
 // Math for optimization
 #define CANVAS_MAX_X 256 // WORLD_SIZE - SCREEN_WIDTH
