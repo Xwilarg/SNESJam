@@ -19,3 +19,5 @@
 
 #define PLAYER_MID_X 112 // SCREEN_WIDTH_HALF - player size (16)
 #define PLAYER_MID_Y 96 // SCREEN_HEIGHT_HALF - player size (16)
+
+#define U8_MAX 256
