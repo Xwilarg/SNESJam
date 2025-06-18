@@ -34,6 +34,19 @@ foreach (var f in files.Skip(1))
     }
 }
 
+Console.WriteLine("Cities:");
+for (int y = 0; y < data.Length; y++)
+{
+    for (int x = 0; x < data[y].Length; x++)
+    {
+        if (data[y][x] == 4)
+        {
+            Console.WriteLine($"{x} ; {y}");
+        }
+    }
+}
+
+Console.WriteLine("Map:");
 foreach (var y in data)
 {
     Console.Write(string.Join(",", y));

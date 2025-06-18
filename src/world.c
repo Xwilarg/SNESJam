@@ -86,10 +86,14 @@ void World_Init(void)
     playerY = startPos;
     Entity_Init(&player, 0, startPos, startPos);
 
-    cities = malloc(sizeof(City*) * 2);
+    cities = malloc(sizeof(City*) * 6);
 
     cities[0] = City_Init("Aenra", 1, 12);
-    cities[1] = NULL;
+    cities[1] = City_Init("Bear", 10, 1);
+    cities[2] = City_Init("Soorn", 4, 30);
+    cities[3] = City_Init("Dekrak", 30, 1);
+    cities[4] = City_Init("Trek Vaek", 30, 12);
+    cities[5] = NULL;
 }
 
 void World_SetScroll(bool forceRender)
@@ -141,7 +145,8 @@ void World_SetScroll(bool forceRender)
             if (arrX == (*c)->x && arrY == (*c)->y)
             {
                 sprintf(debug_str, (*c)->welcomeText);
-                consoleDrawText(1, 1, debug_str);
+                consoleDrawText(10, 6, debug_str);
+                break;
             }
             c++;
         }
@@ -149,7 +154,7 @@ void World_SetScroll(bool forceRender)
         if (*c == NULL)
         {
             sprintf(debug_str, "Unknown city found");
-            consoleDrawText(1, 1, debug_str);
+            consoleDrawText(10, 6, debug_str);
         }
         new_speed = PLAYER_SPEED_ROAD;
         // Found a city!
@@ -157,7 +162,7 @@ void World_SetScroll(bool forceRender)
     else
     {
         sprintf(debug_str, "                                 "); // Clear city text
-        consoleDrawText(1, 1, debug_str);
+        consoleDrawText(10, 6, debug_str);
     }
     if (new_speed == 0)
     {
@@ -195,13 +200,13 @@ void World_SetScroll(bool forceRender)
 
     // Debug
     sprintf(debug_str, "Global: %u ; %u     ", playerX, playerY);
-    consoleDrawText(10, 6, debug_str);
+    consoleDrawText(1, 20, debug_str);
     sprintf(debug_str, "Local: %u ; %u     ", player.x, player.y);
-    consoleDrawText(10, 8, debug_str);
+    consoleDrawText(1, 22, debug_str);
     sprintf(debug_str, "Camera: %d ; %d     ", finalX, finalY);
-    consoleDrawText(10, 10, debug_str);
+    consoleDrawText(1, 24, debug_str);
     sprintf(debug_str, "Grid: %d ; %d     ", arrX, arrY);
-    consoleDrawText(10, 12, debug_str);
+    consoleDrawText(1, 26, debug_str);
 
     // Draw
     bgSetScroll(1, finalX, finalY);
