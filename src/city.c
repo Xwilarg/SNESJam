@@ -5,7 +5,7 @@
 
 #include "city.h"
 
-City* City_Init(char* name, u8 x, u8 y)
+City* City_Init(char* name, u16 x, u16 y)
 {
     City* city = malloc(sizeof(City));
 

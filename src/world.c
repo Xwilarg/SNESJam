@@ -59,11 +59,8 @@ static u8 collisions[WORLD_TILE_SIZE] =
 
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
-static u8 GetSpeed(s16 x, s16 y)
+static u8 GetSpeed(u16 arrX, u16 arrY)
 {
-    u16 arrX = (u16)(x / TILE_SIZE);
-    u16 arrY = (u16)(y / TILE_SIZE);
-
     u16 index = (arrY * WORLD_TILE_LENGTH) + arrX;
 
     u8 value = collisions[index];
@@ -132,26 +129,35 @@ void World_SetScroll(bool forceRender)
 
     if (!didMove && !forceRender) return;
 
-    u8 new_speed = GetSpeed(playerX, playerY);
+    u16 arrX = (u16)(playerX / TILE_SIZE);
+    u16 arrY = (u16)(playerY / TILE_SIZE);
+    u8 new_speed = GetSpeed(arrX, arrY);
     if (new_speed == U8_MAX)
     {
 
         City** c = cities;
         while (*c)
         {
-            if (playerX == (*c)->x && playerY == (*c)->y)
+            if (arrX == (*c)->x && arrY == (*c)->y)
             {
                 sprintf(debug_str, (*c)->welcomeText);
-                consoleDrawText(10, 10, debug_str);
-                return;
+                consoleDrawText(1, 1, debug_str);
             }
             c++;
         }
         
-        sprintf(debug_str, "Unknown city found");
-        consoleDrawText(10, 10, debug_str);
-        return;
+        if (*c == NULL)
+        {
+            sprintf(debug_str, "Unknown city found");
+            consoleDrawText(1, 1, debug_str);
+        }
+        new_speed = PLAYER_SPEED_ROAD;
         // Found a city!
+    }
+    else
+    {
+        sprintf(debug_str, "                                 "); // Clear city text
+        consoleDrawText(1, 1, debug_str);
     }
     if (new_speed == 0)
     {
@@ -194,6 +200,8 @@ void World_SetScroll(bool forceRender)
     consoleDrawText(10, 8, debug_str);
     sprintf(debug_str, "Camera: %d ; %d     ", finalX, finalY);
     consoleDrawText(10, 10, debug_str);
+    sprintf(debug_str, "Grid: %d ; %d     ", arrX, arrY);
+    consoleDrawText(10, 12, debug_str);
 
     // Draw
     bgSetScroll(1, finalX, finalY);
