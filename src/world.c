@@ -108,7 +108,7 @@ void World_SetScroll(bool forceRender)
     if (pad0 & KEY_UP)
     {
         playerY -= player_speed;
-        if (playerY < 0) playerY = 0;
+        if (playerY < TILE_SIZE) playerY = TILE_SIZE;
         didMove = true;
     }
     if (pad0 & KEY_DOWN)
@@ -126,7 +126,7 @@ void World_SetScroll(bool forceRender)
     if (pad0 & KEY_LEFT)
     {
         playerX -= player_speed;
-        if (playerX < 0) playerX = 0;
+        if (playerX < TILE_SIZE) playerX = TILE_SIZE;
         didMove = true;
     }
 
