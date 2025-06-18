@@ -1,6 +1,9 @@
+#include <stdlib.h>
+
 #include "world.h"
 #include "config.h"
 #include "entity.h"
+#include "city.h"
 
 #define PLAYER_SPEED_TREE 1
 #define PLAYER_SPEED_GRASS 2
@@ -14,6 +17,8 @@ static s16 playerX, playerY;
 static Entity player;
 
 static char debug_str[50];
+
+static City** cities;
 
 static u8 player_speed = PLAYER_SPEED_ROAD;
 static u8 collisions[WORLD_TILE_SIZE] =
@@ -83,6 +88,11 @@ void World_Init(void)
     playerX = startPos;
     playerY = startPos;
     Entity_Init(&player, 0, startPos, startPos);
+
+    cities = malloc(sizeof(City*) * 2);
+
+    cities[0] = City_Init("Aenra", 1, 12);
+    cities[1] = NULL;
 }
 
 void World_SetScroll(bool forceRender)
@@ -125,8 +135,21 @@ void World_SetScroll(bool forceRender)
     u8 new_speed = GetSpeed(playerX, playerY);
     if (new_speed == U8_MAX)
     {
-        playerX = lastX;
-        playerY = lastY;
+
+        City** c = cities;
+        while (*c)
+        {
+            if (playerX == (*c)->x && playerY == (*c)->y)
+            {
+                sprintf(debug_str, (*c)->welcomeText);
+                consoleDrawText(10, 10, debug_str);
+                return;
+            }
+            c++;
+        }
+        
+        sprintf(debug_str, "Unknown city found");
+        consoleDrawText(10, 10, debug_str);
         return;
         // Found a city!
     }
