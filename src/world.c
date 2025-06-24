@@ -61,6 +61,7 @@ static u8 collisions[WORLD_TILE_SIZE] =
 
 static u8 currentCity;
 static u8 menuIndex;
+static u8 lastPad0;
 
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
@@ -101,12 +102,42 @@ void World_Init(void)
     cities[5] = NULL;
 
     currentCity = U8_MAX;
+    lastPad0 = 0;
 }
 
 static void RenderMenu()
 {
+    short pad0 = padsCurrent(0);
+    if ((pad0 & KEY_UP) && !(lastPad0 & KEY_UP))
+    {
+        if (menuIndex == 2) menuIndex = 0;
+        else menuIndex++;
+    }
+    if ((pad0 & KEY_DOWN) && !(lastPad0 & KEY_DOWN))
+    {
+        if (menuIndex == 0) menuIndex = 2;
+        else menuIndex--;
+    }
+    if ((pad0 & KEY_A) && !(lastPad0 & KEY_A))
+    {
+        if (menuIndex == 2)
+        {
+            currentCity = U8_MAX;
+            sprintf(debug_str, "                                 ");
+            consoleDrawText(10, 20, debug_str);
+            sprintf(debug_str, "                                 ");
+            consoleDrawText(10, 22, debug_str);
+            sprintf(debug_str, "                                 ");
+            consoleDrawText(10, 24, debug_str);
+            sprintf(debug_str, "                                 "); // City name
+            consoleDrawText(10, 6, debug_str);
+            return;
+        }
+    }
+    lastPad0 = pad0;
+
     City** c = cities;
-    for (; currentCity > 0, c++; currentCity--)
+    for (; currentCity > 0; currentCity--, c++)
     { }
 
     if ((*c)->availablePackages == 0)
@@ -118,9 +149,9 @@ static void RenderMenu()
         sprintf(debug_str, "%cGet a package", menuIndex == 0 ? '>' : ' ');
     }
     consoleDrawText(10, 20, debug_str);
-    sprintf(debug_str, "%cDeliver a package", menuIndex == 0 ? '>' : ' ');
+    sprintf(debug_str, "%cDeliver a package", menuIndex == 1 ? '>' : ' ');
     consoleDrawText(10, 22, debug_str);
-    sprintf(debug_str, "%cLeave", menuIndex == 0 ? '>' : ' ');
+    sprintf(debug_str, "%cLeave", menuIndex == 2 ? '>' : ' ');
     consoleDrawText(10, 24, debug_str);
 }
 
@@ -146,7 +177,7 @@ void World_SetScroll(bool forceRender)
         if (playerY < TILE_SIZE) playerY = TILE_SIZE;
         didMove = true;
     }
-    if (pad0 & KEY_DOWN)
+    else if (pad0 & KEY_DOWN)
     {
         playerY += player_speed;
         if (playerY >= WORLD_SIZE) playerY = WORLD_SIZE - 1;
@@ -158,7 +189,7 @@ void World_SetScroll(bool forceRender)
         if (playerX >= WORLD_SIZE) playerX = WORLD_SIZE - 1;
         didMove = true;
     }
-    if (pad0 & KEY_LEFT)
+    else if (pad0 & KEY_LEFT)
     {
         playerX -= player_speed;
         if (playerX < TILE_SIZE) playerX = TILE_SIZE;
@@ -184,8 +215,7 @@ void World_SetScroll(bool forceRender)
 
                 currentCity = i;
                 menuIndex = 0;
-                playerX = lastX;
-                playerY = lastY;
+                lastPad0 = 0;
                 break;
             }
             c++;
@@ -197,13 +227,21 @@ void World_SetScroll(bool forceRender)
             sprintf(debug_str, "Unknown city found");
             consoleDrawText(10, 6, debug_str);
         }
-        new_speed = 0;
+        playerX = lastX;
+        playerY = lastY;
         // Found a city!
-    }
-    else
-    {
-        sprintf(debug_str, "                                 "); // Clear city text
-        consoleDrawText(10, 6, debug_str);
+        
+        // Clear debug
+        sprintf(debug_str, "                                 ");
+        consoleDrawText(1, 20, debug_str);
+        sprintf(debug_str, "                                 ");
+        consoleDrawText(1, 22, debug_str);
+        sprintf(debug_str, "                                 ");
+        consoleDrawText(1, 24, debug_str);
+        sprintf(debug_str, "                                 ");
+        consoleDrawText(1, 26, debug_str);
+
+        return;
     }
     if (new_speed == 0)
     {
