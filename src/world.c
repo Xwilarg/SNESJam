@@ -57,6 +57,11 @@ static u8 collisions[WORLD_TILE_SIZE] =
     1,1,0,0,0,0,1,1,1,6,6,6,6,1,1,3,3,3,3,1,1,1,6,6,6,6,6,1,1,1,1,1
 };
 
+// MENU
+
+static u8 currentCity;
+static u8 menuIndex;
+
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
 static u8 GetSpeed(u16 arrX, u16 arrY)
@@ -94,10 +99,39 @@ void World_Init(void)
     cities[3] = City_Init("Dekrak", 30, 1);
     cities[4] = City_Init("Trek Vaek", 30, 12);
     cities[5] = NULL;
+
+    currentCity = U8_MAX;
+}
+
+static void RenderMenu()
+{
+    City** c = cities;
+    for (; currentCity > 0, c++; currentCity--)
+    { }
+
+    if ((*c)->availablePackages == 0)
+    {
+        sprintf(debug_str, "%cNo package available", menuIndex == 0 ? '>' : ' ');
+    }
+    else
+    {
+        sprintf(debug_str, "%cGet a package", menuIndex == 0 ? '>' : ' ');
+    }
+    consoleDrawText(10, 20, debug_str);
+    sprintf(debug_str, "%cDeliver a package", menuIndex == 0 ? '>' : ' ');
+    consoleDrawText(10, 22, debug_str);
+    sprintf(debug_str, "%cLeave", menuIndex == 0 ? '>' : ' ');
+    consoleDrawText(10, 24, debug_str);
 }
 
 void World_SetScroll(bool forceRender)
 {
+    if (currentCity < U8_MAX)
+    {
+        RenderMenu();
+        return;
+    }
+
     short pad0 = padsCurrent(0);
 
     bool didMove = false;
@@ -140,23 +174,30 @@ void World_SetScroll(bool forceRender)
     {
 
         City** c = cities;
+        u8 i = 0;
         while (*c)
         {
             if (arrX == (*c)->x && arrY == (*c)->y)
             {
                 sprintf(debug_str, (*c)->welcomeText);
                 consoleDrawText(10, 6, debug_str);
+
+                currentCity = i;
+                menuIndex = 0;
+                playerX = lastX;
+                playerY = lastY;
                 break;
             }
             c++;
+            i++;
         }
         
-        if (*c == NULL)
+        if (*c == NULL) // Not supposed to happen
         {
             sprintf(debug_str, "Unknown city found");
             consoleDrawText(10, 6, debug_str);
         }
-        new_speed = PLAYER_SPEED_ROAD;
+        new_speed = 0;
         // Found a city!
     }
     else
