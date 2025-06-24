@@ -61,7 +61,7 @@ static u8 collisions[WORLD_TILE_SIZE] =
 
 static u8 currentCity;
 static u8 menuIndex;
-static u8 lastPad0;
+static short lastPad0;
 
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
@@ -108,17 +108,17 @@ void World_Init(void)
 static void RenderMenu()
 {
     short pad0 = padsCurrent(0);
-    if ((pad0 & KEY_UP) && !(lastPad0 & KEY_UP))
+    if ((pad0 & KEY_DOWN) && (lastPad0 & KEY_DOWN) == 0)
     {
         if (menuIndex == 2) menuIndex = 0;
         else menuIndex++;
     }
-    if ((pad0 & KEY_DOWN) && !(lastPad0 & KEY_DOWN))
+    else if ((pad0 & KEY_UP) && (lastPad0 & KEY_UP) == 0)
     {
         if (menuIndex == 0) menuIndex = 2;
         else menuIndex--;
     }
-    if ((pad0 & KEY_A) && !(lastPad0 & KEY_A))
+    else if ((pad0 & KEY_A) && (lastPad0 & KEY_A) == 0)
     {
         if (menuIndex == 2)
         {
