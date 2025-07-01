@@ -161,7 +161,8 @@ static void RenderMenu()
     lastPad0 = pad0;
 
     City** c = cities;
-    for (; currentCity > 0; currentCity--, c++)
+    u8 i = currentCity;
+    for (; i > 0; i--, c++)
     { }
 
     
@@ -169,7 +170,7 @@ static void RenderMenu()
     if (currentPackage != NULL)
     {
         targetCity = cities;
-        u8 i = 0;
+        i = 0;
         for (; i < currentPackage->to; i++)
         {
             targetCity++;
