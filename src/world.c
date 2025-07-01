@@ -10,6 +10,8 @@
 #define PLAYER_SPEED_GRASS 2
 #define PLAYER_SPEED_ROAD 5
 
+#define CITY_COUNT 5
+
 extern char patterns, patterns_end;
 extern char palette;
 extern char map, map_end;
@@ -122,6 +124,7 @@ static void ClearMenuUI()
 }
 
 static bool canGetPackage = true;
+static bool canDeliverPackage = true;
 static void RenderMenu()
 {
     short pad0 = padsCurrent(0);
@@ -141,12 +144,14 @@ static void RenderMenu()
         {
             currentPackage = malloc(sizeof(Package));
             currentPackage->from = currentCity;
-            currentPackage->to = 1;
+            currentPackage->to = rand() % CITY_COUNT;
             ClearMenuUI();
-            currentCity = U8_MAX;
-            return;
         }
-        if (menuIndex == 2)
+        else if (menuIndex == 1 && canDeliverPackage)
+        {
+
+        }
+        else if (menuIndex == 2)
         {
             ClearMenuUI();
             currentCity = U8_MAX;
@@ -158,6 +163,18 @@ static void RenderMenu()
     City** c = cities;
     for (; currentCity > 0; currentCity--, c++)
     { }
+
+    
+    City** targetCity = NULL;
+    if (currentPackage != NULL)
+    {
+        targetCity = cities;
+        u8 i = 0;
+        for (; i < currentPackage->to; i++)
+        {
+            targetCity++;
+        }
+    }
 
     if ((*c)->availablePackages == 0)
     {
@@ -177,15 +194,18 @@ static void RenderMenu()
     consoleDrawText(10, 20, debug_str);
     if (currentPackage == NULL)
     {
-        sprintf(debug_str, "%cNot holding package", menuIndex == 1 ? '>' : ' ');
+        sprintf(debug_str, "%cNothing to deliver", menuIndex == 1 ? '>' : ' ');
+        canDeliverPackage = false;
     }
     else if (currentPackage->to != currentCity)
     {
-        sprintf(debug_str, "%cWrong city to deliver", menuIndex == 1 ? '>' : ' ');
+        sprintf(debug_str, "%cDeliver to %s", menuIndex == 1 ? '>' : ' ', (*targetCity)->name);
+        canDeliverPackage = false;
     }
     else
     {
         sprintf(debug_str, "%cDeliver a package", menuIndex == 1 ? '>' : ' ');
+        canDeliverPackage = true;
     }
     consoleDrawText(10, 22, debug_str);
     sprintf(debug_str, "%cLeave", menuIndex == 2 ? '>' : ' ');
@@ -240,7 +260,6 @@ void World_SetScroll(bool forceRender)
     u8 new_speed = GetSpeed(arrX, arrY);
     if (new_speed == U8_MAX)
     {
-
         City** c = cities;
         u8 i = 0;
         while (*c)

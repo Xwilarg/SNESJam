@@ -12,6 +12,8 @@ City* City_Init(char* name, u16 x, u16 y)
     char* welcomeSentence = "Welcome in ";
 
     city->welcomeText = malloc(strlen(welcomeSentence) + strlen(name) + 1);
+    city->name = malloc(strlen(name) + 1);
+    strcpy(city->name, name);
 
     strcpy(city->welcomeText, welcomeSentence);
     strcat(city->welcomeText, name);
