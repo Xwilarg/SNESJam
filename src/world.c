@@ -4,6 +4,7 @@
 #include "config.h"
 #include "entity.h"
 #include "city.h"
+#include "package.h"
 
 #define PLAYER_SPEED_TREE 1
 #define PLAYER_SPEED_GRASS 2
@@ -63,6 +64,8 @@ static u8 currentCity;
 static u8 menuIndex;
 static short lastPad0;
 
+static Package* currentPackage;
+
 // Take the player position and returns at which speed we are going
 // If 0, it means that the tile is innaccessable
 static u8 GetSpeed(u16 arrX, u16 arrY)
@@ -103,8 +106,22 @@ void World_Init(void)
 
     currentCity = U8_MAX;
     lastPad0 = 0;
+    currentPackage = NULL;
 }
 
+static void ClearMenuUI()
+{
+    sprintf(debug_str, "                                 ");
+    consoleDrawText(10, 20, debug_str);
+    sprintf(debug_str, "                                 ");
+    consoleDrawText(10, 22, debug_str);
+    sprintf(debug_str, "                                 ");
+    consoleDrawText(10, 24, debug_str);
+    sprintf(debug_str, "                                 "); // City name
+    consoleDrawText(10, 6, debug_str);
+}
+
+static bool canGetPackage = true;
 static void RenderMenu()
 {
     short pad0 = padsCurrent(0);
@@ -120,17 +137,19 @@ static void RenderMenu()
     }
     else if ((pad0 & KEY_A) && (lastPad0 & KEY_A) == 0)
     {
+        if (menuIndex == 0 && canGetPackage)
+        {
+            currentPackage = malloc(sizeof(Package));
+            currentPackage->from = currentCity;
+            currentPackage->to = 1;
+            ClearMenuUI();
+            currentCity = U8_MAX;
+            return;
+        }
         if (menuIndex == 2)
         {
+            ClearMenuUI();
             currentCity = U8_MAX;
-            sprintf(debug_str, "                                 ");
-            consoleDrawText(10, 20, debug_str);
-            sprintf(debug_str, "                                 ");
-            consoleDrawText(10, 22, debug_str);
-            sprintf(debug_str, "                                 ");
-            consoleDrawText(10, 24, debug_str);
-            sprintf(debug_str, "                                 "); // City name
-            consoleDrawText(10, 6, debug_str);
             return;
         }
     }
@@ -143,13 +162,31 @@ static void RenderMenu()
     if ((*c)->availablePackages == 0)
     {
         sprintf(debug_str, "%cNo package available", menuIndex == 0 ? '>' : ' ');
+        canGetPackage = false;
+    }
+    else if (currentPackage != NULL)
+    {
+        sprintf(debug_str, "%cAlready have package", menuIndex == 0 ? '>' : ' ');
+        canGetPackage = false;
     }
     else
     {
         sprintf(debug_str, "%cGet a package", menuIndex == 0 ? '>' : ' ');
+        canGetPackage = true;
     }
     consoleDrawText(10, 20, debug_str);
-    sprintf(debug_str, "%cDeliver a package", menuIndex == 1 ? '>' : ' ');
+    if (currentPackage == NULL)
+    {
+        sprintf(debug_str, "%cNot holding package", menuIndex == 1 ? '>' : ' ');
+    }
+    else if (currentPackage->to != currentCity)
+    {
+        sprintf(debug_str, "%cWrong city to deliver", menuIndex == 1 ? '>' : ' ');
+    }
+    else
+    {
+        sprintf(debug_str, "%cDeliver a package", menuIndex == 1 ? '>' : ' ');
+    }
     consoleDrawText(10, 22, debug_str);
     sprintf(debug_str, "%cLeave", menuIndex == 2 ? '>' : ' ');
     consoleDrawText(10, 24, debug_str);

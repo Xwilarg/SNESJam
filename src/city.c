@@ -19,7 +19,7 @@ City* City_Init(char* name, u16 x, u16 y)
     city->x = x;
     city->y = y;
 
-    city->availablePackages = 0;
+    city->availablePackages = 1;
 
     return city;
 }
