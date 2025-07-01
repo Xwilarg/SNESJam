@@ -144,7 +144,7 @@ static void RenderMenu()
         {
             currentPackage = malloc(sizeof(Package));
             currentPackage->from = currentCity;
-            currentPackage->to = rand() % CITY_COUNT;
+            currentPackage->to = (playerX * playerY) % CITY_COUNT;
             ClearMenuUI();
         }
         else if (menuIndex == 1 && canDeliverPackage)
